@@ -10,12 +10,17 @@ import json
 from zhdate import ZhDate
 
 
+def split_into_chunks(input_string, chunk_size):
+    return [input_string[i:i + chunk_size] for i in range(0, len(input_string), chunk_size)]
+
+# 将输入变量分割成大小为20个字符的多个变量
+chunk_size = 20
+
 def get_color():
     # 获取随机颜色
     get_colors = lambda n: list(map(lambda i: "#" + "%06x" % random.randint(0, 0xFFFFFF), range(n)))
     color_list = get_colors(100)
     return random.choice(color_list)
-
 
 def get_access_token():
     # appId
@@ -66,8 +71,6 @@ def get_birthday(birthday, year, today):
         birth_day = str(birth_date.__sub__(today)).split(" ")[0]
     return birth_day
 
-
-
 def get_weather(province, city):
     # 城市id
     try:
@@ -99,8 +102,6 @@ def get_weather(province, city):
     tempn = weatherinfo["tempn"]
     return weather, temp, tempn
 
-
-
 #词霸每日一句
 def get_ciba():
     if (Whether_Eng!="否"):
@@ -112,11 +113,11 @@ def get_ciba():
         }
         r = get(url, headers=headers)
         note_en = r.json()["content"]
-        note_ch = r.json()["note"]
-        return note_ch, note_en
+        chunks=split_into_chunks(r.json()["note"],20)
+        note_ch1,note_ch2,note_ch3=chunks
+        return note_ch1,note_ch2,note_ch3, note_en
     else:
         return "",""
-
 
 #彩虹屁
 def caihongpi():
@@ -130,8 +131,10 @@ def caihongpi():
         data = json.loads(data)
         data = data["newslist"][0]["content"]
         if("XXX" in data):
-            data.replace("XXX","蒋蒋")
-        return data
+            data.replace("XXX","东东")
+        chunks=split_into_chunks(data,20)
+        data1,data2,data3=chunks
+        return data1,data2,data3
     else:
         return ""
 
@@ -145,8 +148,9 @@ def health():
         res = conn.getresponse()
         data = res.read()
         data = json.loads(data)
-        data = data["newslist"][0]["content"]
-        return data
+        chunks=split_into_chunks(data["newslist"][0]["content"],20)
+        data1,data2,data3=chunks
+        return data1,data2,data3
     else:
         return ""
 
@@ -161,7 +165,9 @@ def lucky():
         data = res.read()
         data = json.loads(data)
         data = "爱情指数："+str(data["newslist"][1]["content"])+"\n速配星座："+str(data["newslist"][7]["content"])+"\n工作指数："+str(data["newslist"][2]["content"])+"\n今日概述："+str(data["newslist"][8]["content"])
-        return data
+        chunks=split_into_chunks(data,20)
+        data1,data2,data3=chunks
+        return data1,data2,data3 
     else:
         return ""
 
@@ -175,11 +181,12 @@ def lizhi():
         res = conn.getresponse()
         data = res.read()
         data = json.loads(data)
-        return data["newslist"][0]["saying"]
+        chunks=split_into_chunks(data["newslist"][0]["saying"],20)
+        data1,data2,data3=chunks
+        return data1,data2,data3 
     else:
         return ""
         
-
 #下雨概率和建议
 def tip():
     if (tianqi_API!="替换掉我"):
@@ -191,7 +198,9 @@ def tip():
         data = res.read()
         data = json.loads(data)
         tips = data["newslist"][0]["tips"]
-        return tips
+        chunks=split_into_chunks(tips,20)
+        tips_1,tips_2,tips_3=chunks
+        return tips_1,tips_2,tips_3
     else:
         return "",""
 
@@ -246,36 +255,91 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
                 "value": love_days,
                 "color": get_color()
             },
+
+
             "note_en": {
                 "value": note_en,
                 "color": get_color()
             },
-            "note_ch": {
-                "value": note_ch,
+            "note_ch1": {
+                "value": note_ch1,
+                "color": get_color()
+            },
+             "note_ch2": {
+                "value": note_ch2,
+                "color": get_color()
+            },
+            "note_ch3": {
+                "value": note_ch3,
+                "color": get_color()
+            },
+            
+            
+            "pipi1": {
+                "value": pipi1,
+                "color": get_color()
+            },
+            "pipi2": {
+                "value": pipi2,
+                "color": get_color()
+            },
+            "pipi3": {
+                "value": pipi3,
+                "color": get_color()
+
+            },
+            
+
+            "lucky1": {
+                "value": lucky_1,
+                "color": get_color()
+            },
+            "lucky2": {
+                "value": lucky_2,
+                "color": get_color()
+            },
+            "lucky3": {
+                "value": lucky_3,
                 "color": get_color()
             },
 
-            "pipi": {
-                "value": pipi,
+            "lizhi1": {
+                "value": lizhi1,
+                "color": get_color()
+            },
+            "lizhi2": {
+                "value": lizhi2,
+                "color": get_color()
+            },
+            "lizhi3": {
+                "value": lizhi3,
                 "color": get_color()
             },
 
-            "lucky": {
-                "value": lucky_,
+
+            "health1": {
+                "value": health_tip1,
+                "color": get_color()
+            },
+            "health2": {
+                "value": health_tip2,
+                "color": get_color()
+            },
+            "health3": {
+                "value": health_tip3,
                 "color": get_color()
             },
 
-            "lizhi": {
-                "value": lizhi,
+            "tips1": {
+                "value": tips1,
                 "color": get_color()
             },
-            "health": {
-                "value": health_tip,
+            "tips2": {
+                "value": tips2,
                 "color": get_color()
             },
-
-            "tips": {
-                "value": tips,
+            "tips3": {
+                "value": tips3,
                 "color": get_color()
             }
         }
@@ -338,20 +402,20 @@ if __name__ == "__main__":
     #获取星座
     astro = config["astro"]
     # 获取词霸每日金句
-    note_ch, note_en = get_ciba()
+    note_ch1,note_ch2,note_ch3,note_en = get_ciba()
     #彩虹屁
-    pipi = caihongpi()
+    pipi1,pipi2,pipi3 = caihongpi()
     #健康小提示
-    health_tip = health()
+    health_tip1,health_tip2,health_tip3 = health()
     #下雨建议
-    tips = tip()
+    tips1,tips2,tips3 = tip()
     #励志名言
-    lizhi = lizhi()
+    lizhi1,lizhi2,lizhi3 = lizhi()
     #星座运势
-    lucky_ = lucky()
+    lucky_1,lucky_2,lucky_3 = lucky()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, city, weather, max_temperature, min_temperature, pipi, lizhi,tips, note_en, note_ch, health_tip, lucky_)
+        send_message(user, accessToken, city, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3, lizhi1,lizhi2,lizhi3,tips1,tips2,tips3, note_ch1,note_ch2,note_ch3,note_en, health_tip1,health_tip2,health_tip3, lucky_1,lucky_2,lucky_3)
     import time
     time_duration = 3.5
     time.sleep(time_duration)
