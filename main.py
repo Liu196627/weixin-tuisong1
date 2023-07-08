@@ -10,12 +10,6 @@ import json
 from zhdate import ZhDate
 
 
-def split_into_chunks(input_string, chunk_size):
-    return [input_string[i:i + chunk_size] for i in range(0, len(input_string), chunk_size)]
-
-# 将输入变量分割成大小为20个字符的多个变量
-chunk_size = 20
-
 def get_color():
     # 获取随机颜色
     get_colors = lambda n: list(map(lambda i: "#" + "%06x" % random.randint(0, 0xFFFFFF), range(n)))
@@ -113,9 +107,12 @@ def get_ciba():
         }
         r = get(url, headers=headers)
         note_en = r.json()["content"]
-        chunks=split_into_chunks(r.json()["note"],20)
-        note_ch1,note_ch2,note_ch3=chunks
-        return note_ch1,note_ch2,note_ch3, note_en
+        note_ch1 = r.json()["note"][:20]
+        note_ch2 = r.json()["note"][20:40] if len(r.json()["note"]) >= 40 else ""
+        note_ch3 = r.json()["note"][40:60] if len(r.json()["note"]) >= 60 else ""
+        note_ch4 = r.json()["note"][60:80] if len(r.json()["note"]) >= 80 else ""
+        note_ch5 = r.json()["note"][80:100] if len(r.json()["note"]) >= 100 else ""
+        return note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en
     else:
         return "",""
 
@@ -132,9 +129,12 @@ def caihongpi():
         data = data["newslist"][0]["content"]
         if("XXX" in data):
             data.replace("XXX","东东")
-        chunks=split_into_chunks(data,20)
-        data1,data2,data3=chunks
-        return data1,data2,data3
+        data1 = data[:20]
+        data2 = data[20:40] if len(data) >= 40 else ""
+        data3 = data[40:60] if len(data) >= 60 else ""
+        data4 = data[60:80] if len(data) >= 80 else ""
+        data5 = data[80:100] if len(data) >= 100 else ""
+        return data1,data2,data3,data4,data5
     else:
         return ""
 
@@ -148,9 +148,13 @@ def health():
         res = conn.getresponse()
         data = res.read()
         data = json.loads(data)
-        chunks=split_into_chunks(data["newslist"][0]["content"],20)
-        data1,data2,data3=chunks
-        return data1,data2,data3
+        data = data["newslist"][0]["content"]
+        data1 = data[:20]
+        data2 = data[20:40] if len(data) >= 40 else ""
+        data3 = data[40:60] if len(data) >= 60 else ""
+        data4 = data[60:80] if len(data) >= 80 else ""
+        data5 = data[80:100] if len(data) >= 100 else ""
+        return data1,data2,data3,data4,data5
     else:
         return ""
 
@@ -164,10 +168,13 @@ def lucky():
         res = conn.getresponse()
         data = res.read()
         data = json.loads(data)
-        data = "爱情指数："+str(data["newslist"][1]["content"])+"\n速配星座："+str(data["newslist"][7]["content"])+"\n工作指数："+str(data["newslist"][2]["content"])+"\n今日概述："+str(data["newslist"][8]["content"])
-        chunks=split_into_chunks(data,20)
-        data1,data2,data3=chunks
-        return data1,data2,data3 
+        data = "工作指数："+str(data["newslist"][2]["content"])+"   今日概述："+str(data["newslist"][8]["content"])
+        data1 = data[:20]
+        data2 = data[20:40] if len(data) >= 40 else ""
+        data3 = data[40:60] if len(data) >= 60 else ""
+        data4 = data[60:80] if len(data) >= 80 else ""
+        data5 = data[80:100] if 80<len(data) < 100 else ""
+        return data1,data2,data3,data4,data5
     else:
         return ""
 
@@ -181,9 +188,13 @@ def lizhi():
         res = conn.getresponse()
         data = res.read()
         data = json.loads(data)
-        chunks=split_into_chunks(data["newslist"][0]["saying"],20)
-        data1,data2,data3=chunks
-        return data1,data2,data3 
+        data=data["newslist"][0]["saying"]
+        data1 = data[:20]
+        data2 = data[20:40] if len(data) >= 40 else ""
+        data3 = data[40:60] if len(data) >= 60 else ""
+        data4 = data[60:80] if len(data) >= 80 else ""
+        data5 = data[80:100] if len(data) >= 100 else ""
+        return data1,data2,data3,data4,data5
     else:
         return ""
         
@@ -198,14 +209,17 @@ def tip():
         data = res.read()
         data = json.loads(data)
         tips = data["newslist"][0]["tips"]
-        chunks=split_into_chunks(tips,20)
-        tips_1,tips_2,tips_3=chunks
-        return tips_1,tips_2,tips_3
+        tips_1 = tips[:20]
+        tips_2 = tips[20:40] if len(tips) >= 40 else ""
+        tips_3 = tips[40:60] if len(tips) >= 60 else ""
+        tips_4 = data[60:80] if len(data) >= 80 else ""
+        tips_5 = data[80:100] if len(data) >= 100 else ""
+        return tips_1,tips_2,tips_3,tips_4,tips_5
     else:
         return "",""
 
 #推送信息
-def send_message(to_user, access_token, city_name, weather, max_temperature, min_temperature, pipi, lizhi, tips, note_en, note_ch, health_tip, lucky_):
+def send_message(to_user, access_token, city_name, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3,pipi4,pipi5, lizhi1,lizhi2,lizhi3,lizhi4,lizhi5,tips1,tips2,tips3,tips4,tips5, note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en, health_tip1,health_tip2,health_tip3,health_tip4,health_tip5, lucky_1,lucky_2,lucky_3,lucky_4,lucky_5):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -273,6 +287,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
                 "value": note_ch3,
                 "color": get_color()
             },
+             "note_ch4": {
+                "value": note_ch4,
+                "color": get_color()
+            },
+            "note_ch5": {
+                "value": note_ch5,
+                "color": get_color()
+            },
             
             
             "pipi1": {
@@ -285,6 +307,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
             },
             "pipi3": {
                 "value": pipi3,
+                "color": get_color()
+            },
+            "pipi4": {
+                "value": pipi4,
+                "color": get_color()
+            },
+            "pipi5": {
+                "value": pipi5,
                 "color": get_color()
 
             },
@@ -302,6 +332,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
                 "value": lucky_3,
                 "color": get_color()
             },
+            "lucky4": {
+                "value": lucky_4,
+                "color": get_color()
+            },
+            "lucky5": {
+                "value": lucky_5,
+                "color": get_color()
+            },
 
             "lizhi1": {
                 "value": lizhi1,
@@ -313,6 +351,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
             },
             "lizhi3": {
                 "value": lizhi3,
+                "color": get_color()
+            },
+            "lizhi4": {
+                "value": lizhi4,
+                "color": get_color()
+            },
+            "lizhi5": {
+                "value": lizhi5,
                 "color": get_color()
             },
 
@@ -329,6 +375,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
                 "value": health_tip3,
                 "color": get_color()
             },
+            "health4": {
+                "value": health_tip4,
+                "color": get_color()
+            },
+            "health5": {
+                "value": health_tip5,
+                "color": get_color()
+            },
 
             "tips1": {
                 "value": tips1,
@@ -340,6 +394,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
             },
             "tips3": {
                 "value": tips3,
+                "color": get_color()
+            },
+            "tips4": {
+                "value": tips4,
+                "color": get_color()
+            },
+            "tips5": {
+                "value": tips5,
                 "color": get_color()
             }
         }
@@ -402,20 +464,20 @@ if __name__ == "__main__":
     #获取星座
     astro = config["astro"]
     # 获取词霸每日金句
-    note_ch1,note_ch2,note_ch3,note_en = get_ciba()
+    note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en= get_ciba()
     #彩虹屁
-    pipi1,pipi2,pipi3 = caihongpi()
+    pipi1,pipi2,pipi3,pipi4,pipi5 = caihongpi()
     #健康小提示
-    health_tip1,health_tip2,health_tip3 = health()
+    health_tip1,health_tip2,health_tip3,health_tip4,health_tip5 = health()
     #下雨建议
-    tips1,tips2,tips3 = tip()
+    tips1,tips2,tips3,tips4,tips5 = tip()
     #励志名言
-    lizhi1,lizhi2,lizhi3 = lizhi()
+    lizhi1,lizhi2,lizhi3,lizhi4,lizhi5 = lizhi()
     #星座运势
-    lucky_1,lucky_2,lucky_3 = lucky()
+    lucky_1,lucky_2,lucky_3,lucky_4,lucky_5 = lucky()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, city, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3, lizhi1,lizhi2,lizhi3,tips1,tips2,tips3, note_ch1,note_ch2,note_ch3,note_en, health_tip1,health_tip2,health_tip3, lucky_1,lucky_2,lucky_3)
+        send_message(user, accessToken, city, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3,pipi4,pipi5, lizhi1,lizhi2,lizhi3,lizhi4,lizhi5,tips1,tips2,tips3,tips4,tips5, note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en, health_tip1,health_tip2,health_tip3,health_tip4,health_tip5, lucky_1,lucky_2,lucky_3,lucky_4,lucky_5)
     import time
     time_duration = 3.5
     time.sleep(time_duration)
