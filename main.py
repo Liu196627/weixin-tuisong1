@@ -138,6 +138,27 @@ def caihongpi():
     else:
         return ""
 
+
+#朋友圈
+def pyq():
+    if (pyq_api!="替换掉我"):
+        conn = http.client.HTTPSConnection('api.tianapi.com')  #接口域名
+        params = urllib.parse.urlencode({'key':pyq_api})
+        headers = {'Content-type':'application/x-www-form-urlencoded'}
+        conn.request('POST','/pyqwenan/index',params,headers)
+        res = conn.getresponse()
+        data = res.read()
+        data = json.loads(data)
+        data = data["newslist"][0]["content"]
+        data1 = data[:20]
+        data2 = data[20:40] if len(data) >= 40 else ""
+        data3 = data[40:60] if len(data) >= 60 else ""
+        data4 = data[60:80] if len(data) >= 80 else ""
+        data5 = data[80:100] if len(data) >= 100 else ""
+        return data1,data2,data3,data4,data5
+    else:
+        return ""
+
 #健康小提示API
 def health():
     if (health_API!="替换掉我"):
@@ -173,8 +194,10 @@ def lucky():
         data2 = data[20:40] if len(data) >= 40 else ""
         data3 = data[40:60] if len(data) >= 60 else ""
         data4 = data[60:80] if len(data) >= 80 else ""
-        data5 = data[80:100] if 80<len(data) < 100 else ""
-        return data1,data2,data3,data4,data5
+        data5 = data[80:100] if 80<=len(data) else ""
+        data6 = data[100:120] if len(data)>=100 else ""
+        data7 = data[120:140] if len(data)>=120 else ""
+        return data1,data2,data3,data4,data5,data6,data7
     else:
         return ""
 
@@ -219,7 +242,7 @@ def tip():
         return "",""
 
 #推送信息
-def send_message(to_user, access_token, city_name, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3,pipi4,pipi5, lizhi1,lizhi2,lizhi3,lizhi4,lizhi5,tips1,tips2,tips3,tips4,tips5, note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en, health_tip1,health_tip2,health_tip3,health_tip4,health_tip5, lucky_1,lucky_2,lucky_3,lucky_4,lucky_5):
+def send_message(to_user, access_token, city_name, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3,pipi4,pipi5, pyq1,pyq2,pyq3,pyq4,pyq5,lizhi1,lizhi2,lizhi3,lizhi4,lizhi5,tips1,tips2,tips3,tips4,tips5, note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en, health_tip1,health_tip2,health_tip3,health_tip4,health_tip5, lucky_1,lucky_2,lucky_3,lucky_4,lucky_5,lucky_6,lucky_7):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -318,6 +341,28 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
                 "color": get_color()
 
             },
+                        
+            "pyq1": {
+                "value": pyq1,
+                "color": get_color()
+            },
+            "pyq2": {
+                "value": pyq2,
+                "color": get_color()
+            },
+            "pyq3": {
+                "value": pyq3,
+                "color": get_color()
+            },
+            "pyq4": {
+                "value": pyq4,
+                "color": get_color()
+            },
+            "pyq5": {
+                "value": pyq5,
+                "color": get_color()
+
+            },
             
 
             "lucky1": {
@@ -340,7 +385,14 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
                 "value": lucky_5,
                 "color": get_color()
             },
-
+            "lucky6": {
+                "value": lucky_6,
+                "color": get_color()
+            },
+            "lucky7": {
+                "value": lucky_7,
+                "color": get_color()
+            },
             "lizhi1": {
                 "value": lizhi1,
                 "color": get_color()
@@ -451,6 +503,8 @@ if __name__ == "__main__":
     weather, max_temperature, min_temperature = get_weather(province, city)
     #获取彩虹屁API
     caihongpi_API=config["caihongpi_API"]
+    #获取朋友圈API
+    pyq_api=config["pyq_api"]
     #获取励志古言API
     lizhi_API=config["lizhi_API"]
     #获取天气预报API
@@ -467,6 +521,8 @@ if __name__ == "__main__":
     note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en= get_ciba()
     #彩虹屁
     pipi1,pipi2,pipi3,pipi4,pipi5 = caihongpi()
+    #彩虹屁
+    pyq1,pyq2,pyq3,pyq4,pyq5 = pyq()
     #健康小提示
     health_tip1,health_tip2,health_tip3,health_tip4,health_tip5 = health()
     #下雨建议
@@ -474,10 +530,10 @@ if __name__ == "__main__":
     #励志名言
     lizhi1,lizhi2,lizhi3,lizhi4,lizhi5 = lizhi()
     #星座运势
-    lucky_1,lucky_2,lucky_3,lucky_4,lucky_5 = lucky()
+    lucky_1,lucky_2,lucky_3,lucky_4,lucky_5,lucky_6,lucky_7 = lucky()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, city, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3,pipi4,pipi5, lizhi1,lizhi2,lizhi3,lizhi4,lizhi5,tips1,tips2,tips3,tips4,tips5, note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en, health_tip1,health_tip2,health_tip3,health_tip4,health_tip5, lucky_1,lucky_2,lucky_3,lucky_4,lucky_5)
+        send_message(user, accessToken, city, weather, max_temperature, min_temperature, pipi1,pipi2,pipi3,pipi4,pipi5, pyq1,pyq2,pyq3,pyq4,pyq5, lizhi1,lizhi2,lizhi3,lizhi4,lizhi5,tips1,tips2,tips3,tips4,tips5, note_ch1,note_ch2,note_ch3,note_ch4,note_ch5, note_en, health_tip1,health_tip2,health_tip3,health_tip4,health_tip5, lucky_1,lucky_2,lucky_3,lucky_4,lucky_5,lucky_6,lucky_7)
     import time
     time_duration = 3.5
     time.sleep(time_duration)
