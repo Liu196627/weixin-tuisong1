@@ -151,10 +151,10 @@ def pyq():
         data = json.loads(data)
         data = data["newslist"][0]["content"]
         data1 = data[:20]
-        data2 = data[20:40] if len(data) >= 40 else ""
-        data3 = data[40:60] if len(data) >= 60 else ""
-        data4 = data[60:80] if len(data) >= 80 else ""
-        data5 = data[80:100] if len(data) >= 100 else ""
+        data2 = data[20:40] if len(data) >= 20 else ""
+        data3 = data[40:60] if len(data) >= 40 else ""
+        data4 = data[60:80] if len(data) >= 60 else ""
+        data5 = data[80:100] if len(data) >= 80 else ""
         return data1,data2,data3,data4,data5
     else:
         return ""
