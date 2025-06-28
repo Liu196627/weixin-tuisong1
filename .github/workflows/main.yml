@@ -22,4 +22,4 @@ jobs:
         pip install -r requirements.txt
     - name: '发送消息'
       run: |
-        python ./main.py
+ #       python ./main.py
